@@ -79,10 +79,10 @@ public:
   }
 
   const ID3v2::FrameFactory *ID3v2FrameFactory;
-  long ID3v2Location;
+  offset_t ID3v2Location;
   long ID3v2OriginalSize;
 
-  long ID3v1Location;
+  offset_t ID3v1Location;
 
   TagUnion tag;
 
@@ -90,8 +90,8 @@ public:
   ByteVector xiphCommentData;
   BlockList blocks;
 
-  long flacStart;
-  long streamStart;
+  offset_t flacStart;
+  offset_t streamStart;
   bool scanned;
 };
 
@@ -341,7 +341,7 @@ ByteVector FLAC::File::streamInfoData()
   return ByteVector();
 }
 
-long FLAC::File::streamLength()
+offset_t FLAC::File::streamLength()
 {
   debug("FLAC::File::streamLength() -- This function is obsolete. Returning zero.");
   return 0;
@@ -456,7 +456,7 @@ void FLAC::File::read(bool readProperties)
 
     const ByteVector infoData = d->blocks.front()->render();
 
-    long streamLength;
+    offset_t streamLength;
 
     if(d->ID3v1Location >= 0)
       streamLength = d->ID3v1Location - d->streamStart;
@@ -477,7 +477,7 @@ void FLAC::File::scan()
   if(!isValid())
     return;
 
-  long nextBlockOffset;
+  offset_t nextBlockOffset;
 
   if(d->ID3v2Location >= 0)
     nextBlockOffset = find("fLaC", d->ID3v2Location + d->ID3v2OriginalSize);
