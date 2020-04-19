@@ -61,7 +61,7 @@ namespace TagLib {
        * Create an instance of APE::Properties with the data read from the
        * APE::File \a file.
        */
-      Properties(File *file, long streamLength, ReadStyle style = Average);
+      Properties(File *file, offset_t streamLength, ReadStyle style = Average);
 
       /*!
        * Destroys this APE::Properties instance.
@@ -129,7 +129,7 @@ namespace TagLib {
       Properties(const Properties &);
       Properties &operator=(const Properties &);
 
-      void read(File *file, long streamLength);
+      void read(File *file, offset_t streamLength);
 
       void analyzeCurrent(File *file);
       void analyzeOld(File *file);

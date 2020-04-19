@@ -38,7 +38,7 @@ namespace
   {
     long long totalLength = 0;
     for(MP4::AtomList::ConstIterator it = list.begin(); it != list.end(); ++it) {
-      long length = (*it)->length;
+      offset_t length = (*it)->length;
       if(length == 0)
         return 0; // for safety, see checkValid() in mp4file.cpp
 
