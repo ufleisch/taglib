@@ -35,6 +35,8 @@
 #include "mp4atom.h"
 #include "mp4item.h"
 
+#define TAGLIB_WITH_MP4_SHWM 1
+
 namespace TagLib {
 
   namespace MP4 {
