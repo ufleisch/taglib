@@ -163,8 +163,8 @@ namespace TagLib {
      * \note This has the practical limitation that \a pattern can not be longer
      * than the buffer size used by readBlock().  Currently this is 1024 bytes.
      */
-    long find(const ByteVector &pattern,
-              long fromOffset = 0,
+    offset_t find(const ByteVector &pattern,
+              offset_t fromOffset = 0,
               const ByteVector &before = ByteVector());
 
     /*!
@@ -179,8 +179,8 @@ namespace TagLib {
      * \note This has the practical limitation that \a pattern can not be longer
      * than the buffer size used by readBlock().  Currently this is 1024 bytes.
      */
-    long rfind(const ByteVector &pattern,
-               long fromOffset = 0,
+    offset_t rfind(const ByteVector &pattern,
+               offset_t fromOffset = 0,
                const ByteVector &before = ByteVector());
 
     /*!
@@ -190,7 +190,7 @@ namespace TagLib {
      * \note This method is slow since it requires rewriting all of the file
      * after the insertion point.
      */
-    void insert(const ByteVector &data, unsigned long start = 0, unsigned long replace = 0);
+    void insert(const ByteVector &data, offset_t start = 0, unsigned long replace = 0);
 
     /*!
      * Removes a block of the file starting a \a start and continuing for
@@ -199,7 +199,7 @@ namespace TagLib {
      * \note This method is slow since it involves rewriting all of the file
      * after the removed portion.
      */
-    void removeBlock(unsigned long start = 0, unsigned long length = 0);
+    void removeBlock(offset_t start = 0, unsigned long length = 0);
 
     /*!
      * Returns true if the file is read only (or if the file can not be opened).
@@ -223,7 +223,7 @@ namespace TagLib {
      *
      * \see Position
      */
-    void seek(long offset, Position p = Beginning);
+    void seek(offset_t offset, Position p = Beginning);
 
     /*!
      * Reset the end-of-file and error flags on the file.
@@ -233,12 +233,12 @@ namespace TagLib {
     /*!
      * Returns the current offset within the file.
      */
-    long tell() const;
+    offset_t tell() const;
 
     /*!
      * Returns the length of the file.
      */
-    long length();
+    offset_t length();
 
     /*!
      * Returns true if \a file can be opened for reading.  If the file does not
@@ -286,7 +286,7 @@ namespace TagLib {
     /*!
      * Truncates the file to a \a length.
      */
-    void truncate(long length);
+    void truncate(offset_t length);
 
     /*!
      * Returns the buffer size that is used for internal buffering.

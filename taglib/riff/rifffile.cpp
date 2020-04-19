@@ -38,7 +38,7 @@ using namespace TagLib;
 struct Chunk
 {
   ByteVector   name;
-  unsigned int offset;
+  offset_t offset;
   unsigned int size;
   unsigned int padding;
 };
@@ -54,7 +54,7 @@ public:
   const Endianness endianness;
 
   unsigned int size;
-  long sizeOffset;
+  offset_t sizeOffset;
 
   std::vector<Chunk> chunks;
 };
@@ -108,7 +108,7 @@ unsigned int RIFF::File::chunkDataSize(unsigned int i) const
   return d->chunks[i].size;
 }
 
-unsigned int RIFF::File::chunkOffset(unsigned int i) const
+offset_t RIFF::File::chunkOffset(unsigned int i) const
 {
   if(i >= d->chunks.size()) {
     debug("RIFF::File::chunkPadding() - Index out of range. Returning 0.");
@@ -212,7 +212,7 @@ void RIFF::File::setChunkData(const ByteVector &name, const ByteVector &data, bo
 
   Chunk &last = d->chunks.back();
 
-  long offset = last.offset + last.size + last.padding;
+  offset_t offset = last.offset + last.size + last.padding;
   if(offset & 1) {
     if(last.padding == 1) {
       last.padding = 0; // This should not happen unless the file is corrupted.
@@ -283,7 +283,7 @@ void RIFF::File::read()
 {
   const bool bigEndian = (d->endianness == BigEndian);
 
-  long offset = tell();
+  offset_t offset = tell();
 
   offset += 4;
   d->sizeOffset = offset;
@@ -352,7 +352,7 @@ void RIFF::File::read()
 }
 
 void RIFF::File::writeChunk(const ByteVector &name, const ByteVector &data,
-                            unsigned long offset, unsigned long replace)
+                            offset_t offset, unsigned long replace)
 {
   ByteVector combined;
 

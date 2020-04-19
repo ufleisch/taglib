@@ -65,14 +65,14 @@ public:
 // public members
 ////////////////////////////////////////////////////////////////////////////////
 
-WavPack::Properties::Properties(const ByteVector &, long, ReadStyle style) :
+WavPack::Properties::Properties(const ByteVector &, offset_t, ReadStyle style) :
   AudioProperties(style),
   d(new PropertiesPrivate())
 {
   debug("WavPack::Properties::Properties() -- This constructor is no longer used.");
 }
 
-WavPack::Properties::Properties(File *file, long streamLength, ReadStyle style) :
+WavPack::Properties::Properties(File *file, offset_t streamLength, ReadStyle style) :
   AudioProperties(style),
   d(new PropertiesPrivate())
 {
@@ -160,9 +160,9 @@ namespace
 
 #define FINAL_BLOCK     0x1000
 
-void WavPack::Properties::read(File *file, long streamLength)
+void WavPack::Properties::read(File *file, offset_t streamLength)
 {
-  long offset = 0;
+  offset_t offset = 0;
 
   while(true) {
     file->seek(offset);
@@ -210,9 +210,9 @@ void WavPack::Properties::read(File *file, long streamLength)
   }
 }
 
-unsigned int WavPack::Properties::seekFinalIndex(File *file, long streamLength)
+unsigned int WavPack::Properties::seekFinalIndex(File *file, offset_t streamLength)
 {
-  const long offset = file->rfind("wvpk", streamLength);
+  const offset_t offset = file->rfind("wvpk", streamLength);
   if(offset == -1)
     return 0;
 

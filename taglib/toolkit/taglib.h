@@ -44,6 +44,8 @@
 #define TAGLIB_CONSTRUCT_BITSET(x) static_cast<unsigned long>(x)
 #endif
 
+#define TAGLIB_WITH_OFFSET_TYPE
+
 #include <string>
 
 //! A namespace for all TagLib related classes and functions
@@ -68,6 +70,14 @@ namespace TagLib {
   typedef unsigned int       uint;
   typedef unsigned long      ulong;
   typedef unsigned long long ulonglong;
+
+  // Offset or length type for I/O streams.
+  // In Win32, always 64bit. Otherwise, equivalent to off_t.
+#ifdef _WIN32
+  typedef long long offset_t;
+#else
+  typedef off_t     offset_t;
+#endif
 
   /*!
    * Unfortunately std::wstring isn't defined on some systems, (i.e. GCC < 3)

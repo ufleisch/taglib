@@ -130,7 +130,7 @@ void Ogg::File::setPacket(unsigned int i, const ByteVector &p)
 const Ogg::PageHeader *Ogg::File::firstPageHeader()
 {
   if(!d->firstPageHeader) {
-    const long firstPageHeaderOffset = find("OggS");
+    const offset_t firstPageHeaderOffset = find("OggS");
     if(firstPageHeaderOffset < 0)
       return 0;
 
@@ -143,7 +143,7 @@ const Ogg::PageHeader *Ogg::File::firstPageHeader()
 const Ogg::PageHeader *Ogg::File::lastPageHeader()
 {
   if(!d->lastPageHeader) {
-    const long lastPageHeaderOffset = rfind("OggS");
+    const offset_t lastPageHeaderOffset = rfind("OggS");
     if(lastPageHeaderOffset < 0)
       return 0;
 
@@ -193,7 +193,7 @@ bool Ogg::File::readPages(unsigned int i)
 {
   while(true) {
     unsigned int packetIndex;
-    long offset;
+    offset_t offset;
 
     if(d->pages.isEmpty()) {
       packetIndex = 0;
@@ -276,8 +276,8 @@ void Ogg::File::writePacket(unsigned int i, const ByteVector &packet)
   for(it = pages.begin(); it != pages.end(); ++it)
     data.append((*it)->render());
 
-  const unsigned long originalOffset = firstPage->fileOffset();
-  const unsigned long originalLength = lastPage->fileOffset() + lastPage->size() - originalOffset;
+  const offset_t originalOffset = firstPage->fileOffset();
+  const offset_t originalLength = lastPage->fileOffset() + lastPage->size() - originalOffset;
 
   insert(data, originalOffset, originalLength);
 
