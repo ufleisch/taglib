@@ -9,9 +9,9 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, windows-2025]
+        os: [ubuntu-latest, macos-latest, windows-2025-vs2026, windows-2025]
         include:
-          - os: windows-latest
+          - os: windows-2025-vs2026
             cmake_extra_args: '-DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"'
           - os: windows-2025
             cmake_extra_args: '-G "MinGW Makefiles" -DCPPUNIT_INCLUDE_DIR="$env:GITHUB_WORKSPACE/pkg/usr/local/include" -DCPPUNIT_LIBRARIES="$($env:GITHUB_WORKSPACE -replace "\\", "/")/pkg/usr/local/lib/libcppunit.dll.a" -DCPPUNIT_INSTALLED_VERSION="1.15.1"'
@@ -34,7 +34,7 @@ jobs:
 
     - name: Set up Windows
       run: vcpkg install cppunit utfcpp zlib --triplet x64-windows
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2025-vs2026'
 
     - name: Set up MinGW
       shell: bash
@@ -68,7 +68,7 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}} -V --no-tests=error
-      if: matrix.os != 'windows-latest' && matrix.os != 'windows-2025'
+      if: matrix.os != 'windows-2025-vs2026' && matrix.os != 'windows-2025'
 
     - name: Test Windows
       working-directory: ${{github.workspace}}/build
@@ -78,7 +78,7 @@ jobs:
         $env:Path += ";$env:VCPKG_INSTALLATION_ROOT\packages\utfcpp_x64-windows\bin"
         $env:Path += ";$env:VCPKG_INSTALLATION_ROOT\packages\zlib_x64-windows\bin"
         ctest -C ${{env.BUILD_TYPE}} -V --no-tests=error
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2025-vs2026'
 
     - name: Test MinGW
       working-directory: ${{github.workspace}}/build
