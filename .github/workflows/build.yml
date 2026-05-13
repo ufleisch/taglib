@@ -9,14 +9,14 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2025-vs2026, windows-2025]
+        os: [ubuntu-latest, macos-latest, windows-latest, windows-2025-vs2026]
         include:
-          - os: windows-2025-vs2026
+          - os: windows-latest
             cmake_extra_args: '-DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"'
-          - os: windows-2025
+          - os: windows-2025-vs2026
             cmake_extra_args: '-G "MinGW Makefiles" -DCPPUNIT_INCLUDE_DIR="$env:GITHUB_WORKSPACE/pkg/usr/local/include" -DCPPUNIT_LIBRARIES="$($env:GITHUB_WORKSPACE -replace "\\", "/")/pkg/usr/local/lib/libcppunit.dll.a" -DCPPUNIT_INSTALLED_VERSION="1.15.1"'
-    # The windows-2025 runner is used for MinGW.
-    name: ${{ matrix.os == 'windows-2025' && 'mingw' || matrix.os }}
+    # The windows-2025-vs2026 runner is used for MinGW.
+    name: ${{ matrix.os == 'windows-2025-vs2026' && 'mingw' || matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -34,7 +34,7 @@ jobs:
 
     - name: Set up Windows
       run: vcpkg install cppunit utfcpp zlib --triplet x64-windows
-      if: matrix.os == 'windows-2025-vs2026'
+      if: matrix.os == 'windows-latest'
 
     - name: Set up MinGW
       shell: bash
@@ -52,7 +52,7 @@ jobs:
         find build_cppunit -name Makefile -exec sed -i 's/\($[({]SHELL[)}]\)/"\1"/' {} \;
         sed -i 's/^\(SUBDIRS.*\) examples\(.*\)$/\1\2/' build_cppunit/Makefile
         (cd build_cppunit && mingw32-make -j$(nproc) install DESTDIR=$(cd .. && pwd)/pkg)
-      if: matrix.os == 'windows-2025'
+      if: matrix.os == 'windows-2025-vs2026'
 
     - name: Configure
       run: >
@@ -68,7 +68,7 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}} -V --no-tests=error
-      if: matrix.os != 'windows-2025-vs2026' && matrix.os != 'windows-2025'
+      if: matrix.os != 'windows-latest' && matrix.os != 'windows-2025-vs2026'
 
     - name: Test Windows
       working-directory: ${{github.workspace}}/build
@@ -78,11 +78,11 @@ jobs:
         $env:Path += ";$env:VCPKG_INSTALLATION_ROOT\packages\utfcpp_x64-windows\bin"
         $env:Path += ";$env:VCPKG_INSTALLATION_ROOT\packages\zlib_x64-windows\bin"
         ctest -C ${{env.BUILD_TYPE}} -V --no-tests=error
-      if: matrix.os == 'windows-2025-vs2026'
+      if: matrix.os == 'windows-latest'
 
     - name: Test MinGW
       working-directory: ${{github.workspace}}/build
       run: |
         $env:Path += ";$PWD/taglib;$PWD/bindings/c;${{github.workspace}}/pkg/usr/local/bin"
         ctest -C ${{env.BUILD_TYPE}} -V --no-tests=error
-      if: matrix.os == 'windows-2025'
+      if: matrix.os == 'windows-2025-vs2026'
